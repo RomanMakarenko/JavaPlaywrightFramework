@@ -16,7 +16,7 @@ public class BookingFormPage {
         this.page = page;
     }
 
-    public void fillAndConfirm(
+    public BookingConfirmPage fillAndConfirm(
             String name,
             String email,
             String phoneNumber
@@ -26,5 +26,6 @@ public class BookingFormPage {
         page.getByPlaceholder(PHONE_PLACEHOLDER).fill(phoneNumber);
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Confirm Booking")).click();
         assertThat(page.getByText("Your tickets are reserved.")).isVisible();
+        return new BookingConfirmPage(page);
     }
 }

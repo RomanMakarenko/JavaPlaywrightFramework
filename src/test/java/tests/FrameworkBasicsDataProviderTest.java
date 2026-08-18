@@ -1,9 +1,7 @@
 package tests;
 
 import com.microsoft.playwright.Locator;
-import com.microsoft.playwright.Page;
 import com.microsoft.playwright.assertions.LocatorAssertions;
-import com.microsoft.playwright.options.AriaRole;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -50,29 +48,21 @@ public class FrameworkBasicsDataProviderTest extends BaseTest {
         int seatsNumBeforeBooking = eventsPage.getSeatsCount(targetEventCard);
 
         System.out.println(seatsNumBeforeBooking);
+
         BookingFormPage bookingFormPage =  eventsPage.proceedToBookingCardEvent(targetEventCard);
         //Book
-        bookingFormPage.fillAndConfirm(data.get("bookingName"), data.get("bookingEmail"), data.get("bookingPhone"));
-        String bookRef = page.locator("span[class^=\"booking-ref\"]").innerText();
+        BookingConfirmPage bookingDetailsPage = bookingFormPage.fillAndConfirm(data.get("bookingName"), data.get("bookingEmail"), data.get("bookingPhone"));
+        String bookRef = bookingDetailsPage.getBookingReference();
         System.out.println(bookRef);
         //Open my bookings
-        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("View My Bookings")).click();
+        MyBookingsPage myBookingsPage = bookingDetailsPage.openMyBookings();
         //Verify in booking system
-        Locator bookingCards = page.getByTestId("booking-card");
-        Locator targetBookingCard = bookingCards.filter(new Locator.FilterOptions().setHasText(bookRef));
-        assertThat(targetBookingCard).isVisible();
-        //
-        page.locator("#nav-events").click();
+        myBookingsPage.checkLastBookingVisible(bookRef);
+        eventsPage.goTo();
         page.waitForTimeout(10000);
-        Locator eventCardsAfterBooking = page.getByTestId("event-card");
-        eventCardsAfterBooking.first().waitFor();
-        System.out.println(eventCardsAfterBooking.count());
-        Locator targetEventCardAfterBooking = eventCardsAfterBooking.filter(new Locator.FilterOptions().setHasText(data.get("title")));
-        assertThat(targetEventCardAfterBooking).isVisible(new LocatorAssertions.IsVisibleOptions().setTimeout(10000));
-        String seatsTextAfterBooking = targetEventCardAfterBooking.getByText("seats").innerText();
-        System.out.println(seatsTextAfterBooking);
-        page.pause();
-        int seatsNumAfterBooking = Integer.parseInt(seatsTextAfterBooking.split(" ")[0]);
+        Locator targetEventCardAfterBooking = eventsPage.findEventCard(data.get("title"));
+        int seatsNumAfterBooking = eventsPage.getSeatsCount(targetEventCardAfterBooking);
+        System.out.println(seatsNumAfterBooking);
         Assert.assertEquals(seatsNumBeforeBooking - seatsNumAfterBooking, 1);
     }
 }
