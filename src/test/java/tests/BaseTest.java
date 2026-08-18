@@ -17,7 +17,7 @@ public class BaseTest {
     Playwright playwright;
     String baseURL;
 
-    @BeforeMethod
+    @BeforeMethod(alwaysRun = true)
     public void setUp() {
         Properties properties = new Properties();
         playwright = Playwright.create();
@@ -29,7 +29,10 @@ public class BaseTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        String browserName = properties.getProperty("browser");
+        //mvn test -Pregression -Dbrowser=firefox -Denv=stage
+        String browserName = System.getProperty("browser") != null
+                ? System.getProperty("browser")
+                : properties.getProperty("browser");
         if ("firefox".equalsIgnoreCase(browserName)) {
             browser = playwright.firefox().launch(new BrowserType.LaunchOptions().setHeadless(false));
         }  else if ("safari".equalsIgnoreCase(browserName)) {
@@ -41,6 +44,9 @@ public class BaseTest {
         //Browser browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setChannel("chrome").setHeadless(false));
         page = browser.newPage();
         page.setDefaultTimeout(8000);
-        baseURL = properties.getProperty("dev.baseURL");
+        String envName = System.getProperty("env") != null
+                ? System.getProperty("env")
+                : properties.getProperty("env");
+        baseURL = properties.getProperty(envName + ".baseURL");
     }
 }

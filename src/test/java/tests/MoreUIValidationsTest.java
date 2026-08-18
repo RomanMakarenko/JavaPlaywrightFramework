@@ -47,7 +47,7 @@ public class MoreUIValidationsTest {
  //       pageA.pause();
     }
 
-    @Test(groups = {"smoke", "regression"})
+    @Test(groups = {"smoke"})
     public void uiControls() {
         Locator userBtn = pageA.getByRole(AriaRole.RADIO, new Page.GetByRoleOptions().setName("User"));
         userBtn.click();

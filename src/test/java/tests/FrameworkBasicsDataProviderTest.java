@@ -21,7 +21,7 @@ public class FrameworkBasicsDataProviderTest extends BaseTest {
         return DataProviderUtil.getJSONDataToMap("src/main/resources/eventBookingData.json");
     }
 
-    @Test(dataProvider = "eventBookingData")
+    @Test(groups = {"regression"}, dataProvider = "eventBookingData")
     public void demoTest(HashMap<String,String> data) {
         LoginPage loginPage = new LoginPage(page, baseURL);
         DashboardPage dashboardPage = loginPage.loginToApplication("romantest@test.com","qw123123_QW");
