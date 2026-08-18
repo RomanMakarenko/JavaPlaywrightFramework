@@ -15,7 +15,7 @@ public class MoreUIValidationsTest {
     Page pageA;
     BrowserContext context;
 
-    @BeforeMethod
+    @BeforeMethod(alwaysRun = true)
     public void setUp() {
         playwright = Playwright.create();
         browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
@@ -47,7 +47,7 @@ public class MoreUIValidationsTest {
  //       pageA.pause();
     }
 
-    @Test
+    @Test(groups = {"smoke", "regression"})
     public void uiControls() {
         Locator userBtn = pageA.getByRole(AriaRole.RADIO, new Page.GetByRoleOptions().setName("User"));
         userBtn.click();

@@ -1,0 +1,11 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+
+<suite name="TestSuite" parallel="classes" thread-count="3">
+    <test name="RegressionTest">
+        <classes>
+            <class name="tests.FrameworkBasicsDataProviderTest"/>
+            <class name="tests.ContinueUIValidationsTest"/>
+            <class name="tests.MoreUIValidationsTest"/>
+        </classes>
+    </test>
+</suite>
