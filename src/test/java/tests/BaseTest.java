@@ -29,16 +29,18 @@ public class BaseTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //mvn test -Pregression -Dbrowser=firefox -Denv=stage
+        //mvn test -Pregression -Dbrowser=firefox -Denv=stage -Dheadless=true
         String browserName = System.getProperty("browser") != null
                 ? System.getProperty("browser")
                 : properties.getProperty("browser");
+        boolean headless = Boolean.parseBoolean(
+                System.getProperty("headless", properties.getProperty("headless", "true")));
         if ("firefox".equalsIgnoreCase(browserName)) {
-            browser = playwright.firefox().launch(new BrowserType.LaunchOptions().setHeadless(false));
+            browser = playwright.firefox().launch(new BrowserType.LaunchOptions().setHeadless(headless));
         }  else if ("safari".equalsIgnoreCase(browserName)) {
-            browser = playwright.webkit().launch(new BrowserType.LaunchOptions().setHeadless(false));
+            browser = playwright.webkit().launch(new BrowserType.LaunchOptions().setHeadless(headless));
         } else {
-            browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
+            browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(headless));
         }
 
         //Browser browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setChannel("chrome").setHeadless(false));
