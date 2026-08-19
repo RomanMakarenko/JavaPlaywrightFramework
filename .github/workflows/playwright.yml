@@ -39,4 +39,4 @@ jobs:
       - name: Ensure browsers are installed
         run: mvn exec:java -e -D exec.mainClass=com.microsoft.playwright.CLI -D exec.args="install --with-deps"
       - name: Run tests
-        run: mvn test -Pregression -Dbrowser=${{ github.input.inputs.browser || 'chrome' }} -Denv=${{ github.input.inputs.environment || 'dev' }} -Dheadless=true
+        run: mvn test -Pregression -Dbrowser=${{ inputs.browser || 'chrome' }} -Denv=${{ inputs.environment || 'dev' }} -Dheadless=true
