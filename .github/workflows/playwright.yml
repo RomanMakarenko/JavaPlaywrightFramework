@@ -4,6 +4,26 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
+  workflow_dispatch:
+    inputs:
+      browser:
+        description: "Browser to run test on"
+        required: true
+        default: 'chrome'
+        type: choice
+        options:
+          - chrome
+          - firefox
+          - safari
+      environment:
+        description: "Environment to run test on"
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - stage
+          - prod
 jobs:
   test:
     timeout-minutes: 60
@@ -19,4 +39,4 @@ jobs:
       - name: Ensure browsers are installed
         run: mvn exec:java -e -D exec.mainClass=com.microsoft.playwright.CLI -D exec.args="install --with-deps"
       - name: Run tests
-        run: mvn test -Pregression -Dbrowser=firefox -Denv=stage -Dheadless=true
+        run: mvn test -Pregression -Dbrowser=${{ inputs.browser || 'chrome' }} -Denv=${{ inputs.environment || 'dev' }} -Dheadless=true
